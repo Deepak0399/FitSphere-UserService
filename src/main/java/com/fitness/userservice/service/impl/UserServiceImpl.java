@@ -36,6 +36,12 @@ public class UserServiceImpl implements UserService
         User savedUser = userRepository.save(user);
         return getUserResponse(savedUser);
     }
+
+    @Override
+    public Boolean existByUserId(String userId) {
+        return userRepository.existsById(userId);
+    }
+
     private UserResponse getUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
