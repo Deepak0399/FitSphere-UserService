@@ -8,9 +8,11 @@ import com.fitness.userservice.model.User;
 import com.fitness.userservice.repositories.UserRepository;
 import com.fitness.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
 {
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService
 
     @Override
     public Boolean existByUserId(String userId) {
+        log.info("Validating User for userId: {}", userId);
         return userRepository.existsById(userId);
     }
 
