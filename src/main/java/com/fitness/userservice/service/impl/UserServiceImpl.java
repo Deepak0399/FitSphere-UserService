@@ -2,7 +2,6 @@ package com.fitness.userservice.service.impl;
 
 import com.fitness.userservice.dto.RegisterRequest;
 import com.fitness.userservice.dto.UserResponse;
-import com.fitness.userservice.exception.DuplicateResourceException;
 import com.fitness.userservice.exception.ResourceNotFoundException;
 import com.fitness.userservice.model.User;
 import com.fitness.userservice.repositories.UserRepository;
@@ -27,11 +26,13 @@ public class UserServiceImpl implements UserService
     @Override
     public UserResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("Email Already Exist");
+            User existingUser = userRepository.findByEmail(request.getEmail());
+            return getUserResponse(existingUser);
         }
         User user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .keycloakId(request.getKeycloakId())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .build();
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService
     private UserResponse getUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
+        response.setKeycloakId(user.getKeycloakId());
         response.setEmail(user.getEmail());
         response.setPassword(user.getPassword());
         response.setFirstName(user.getFirstName());
