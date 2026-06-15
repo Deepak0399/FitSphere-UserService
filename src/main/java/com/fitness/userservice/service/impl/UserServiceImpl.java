@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService
 
     @Override
     public UserResponse register(RegisterRequest request) {
+        log.info("Request to register user: {}", request);
         if (userRepository.existsByEmail(request.getEmail())) {
             User existingUser = userRepository.findByEmail(request.getEmail());
             return getUserResponse(existingUser);
@@ -37,13 +38,14 @@ public class UserServiceImpl implements UserService
                 .lastName(request.getLastName())
                 .build();
         User savedUser = userRepository.save(user);
+        log.info("User registered and saved: {}", savedUser);
         return getUserResponse(savedUser);
     }
 
     @Override
     public Boolean existByUserId(String userId) {
         log.info("Validating User for userId: {}", userId);
-        return userRepository.existsById(userId);
+        return userRepository.existsByKeycloakId(userId);
     }
 
     private UserResponse getUserResponse(User user) {
